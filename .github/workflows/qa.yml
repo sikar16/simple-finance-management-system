@@ -8,6 +8,12 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SHADOW_DATABASE_URL: ${{ secrets.SHADOW_DATABASE_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      # SHADOW_DATABASE_URL: mysql://huludeig_finance_mang:Vq%403CmmO5g%5DZ56p%5D%3AG7B@185.73.8.1:3306/shadowfinace_mang
+      # JWT_SECRET: ber_secret_key_2026_890
 
     steps:
       # =========================
@@ -28,7 +34,10 @@ jobs:
       # =========================
       # Install Dependencies
       # =========================
+      
       - name: Install Dependencies
+        env:
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm install --legacy-peer-deps
 
       # =========================
@@ -41,9 +50,9 @@ jobs:
           ls -lah .next/standalone
 
         env:
-         DATABASE_URL: mysql://huludeig_finance_mang:Vq@3CmmO5g]Z56p]:G7B@185.73.8.1:3306/finace_mang
-         SHADOW_DATABASE_URL: mysql://huludeig_finance_mang:Vq@3CmmO5g]Z56p]:G7B@185.73.8.1:3306/shadowfinace_mang
-         JWT_SECRET: ber_secret_key_2026_890
+         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+         SHADOW_DATABASE_URL: ${{ secrets.SHADOW_DATABASE_URL }}
+         JWT_SECRET: ${{ secrets.JWT_SECRET }}
       # =========================
       # Prepare Package
       # =========================
@@ -73,7 +82,7 @@ jobs:
           ssh-keyscan -p 1219 -H "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
           SSH_TARGET="${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_HOST }}"
-          DEPLOY_PATH="/home/${{ secrets.CPANEL_USERNAME }}/${{ secrets.CPANEL_REMOTE_PATH_QA }}"
+          DEPLOY_PATH="/home/${{ secrets.CPANEL_USERNAME }}/${{ secrets.CPANEL_REMOTE_PATH_DEV }}"
           SSH_OPTS="-p 1219 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
           SCP_OPTS="-P 1219 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
 
@@ -106,4 +115,4 @@ jobs:
             echo 'Deployment complete. Contents:'
             ls -lah
           "
- 
+    
