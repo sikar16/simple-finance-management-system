@@ -79,12 +79,12 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p 1219 -H "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -p 19199 -H "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
           SSH_TARGET="${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_HOST }}"
           DEPLOY_PATH="/home/${{ secrets.CPANEL_USERNAME }}/${{ secrets.CPANEL_REMOTE_PATH_DEV }}"
-          SSH_OPTS="-p 1219 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
-          SCP_OPTS="-P 1219 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+          SSH_OPTS="-p 19199 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+          SCP_OPTS="-P 19199 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
 
           echo "Ensuring deploy directory exists: ${DEPLOY_PATH}"
           ssh ${SSH_OPTS} "${SSH_TARGET}" "mkdir -p '${DEPLOY_PATH}'"
