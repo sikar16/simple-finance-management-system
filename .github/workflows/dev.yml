@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      SHADOW_DATABASE_URL: mysql://huludeig_finance_mang:Vq%403CmmO5g%5DZ56p%5D%3AG7B@185.73.8.1:3306/shadowfinace_mang
-      JWT_SECRET: ber_secret_key_2026_890
+      SHADOW_DATABASE_URL: ${{ secrets.SHADOW_DATABASE_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      # SHADOW_DATABASE_URL: mysql://huludeig_finance_mang:Vq%403CmmO5g%5DZ56p%5D%3AG7B@185.73.8.1:3306/shadowfinace_mang
+      # JWT_SECRET: ber_secret_key_2026_890
 
     steps:
       # =========================
@@ -49,8 +51,8 @@ jobs:
 
         env:
          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-         SHADOW_DATABASE_URL: mysql://huludeig_finance_mang:Vq%403CmmO5g%5DZ56p%5D%3AG7B@185.73.8.1:3306/shadowfinace_mang
-         JWT_SECRET: ber_secret_key_2026_890
+         SHADOW_DATABASE_URL: ${{ secrets.SHADOW_DATABASE_URL }}
+         JWT_SECRET: ${{ secrets.JWT_SECRET }}
       # =========================
       # Prepare Package
       # =========================
