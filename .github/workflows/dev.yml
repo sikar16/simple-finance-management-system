@@ -76,43 +76,138 @@ jobs:
       # =========================
       - name: Upload and Deploy to cPanel
         run: |
+          echo "===== DEBUG: Starting deployment ====="
+          echo "Runner OS: $(uname -a)"
+          echo "Current directory: $(pwd)"
+          echo "Files in workspace:"
+          ls -lah
+
           mkdir -p ~/.ssh
+
+          echo "===== DEBUG: Creating SSH key ====="
           echo "${{ secrets.SSH }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+
+          echo "SSH key permissions:"
+          ls -lah ~/.ssh/deploy_key
+
+          echo "===== DEBUG: Adding known hosts ====="
           ssh-keyscan -p 19199 -H "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+          echo "Known hosts:"
+          cat ~/.ssh/known_hosts || true
 
           SSH_TARGET="${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_HOST }}"
           DEPLOY_PATH="/home/${{ secrets.CPANEL_USERNAME }}/${{ secrets.CPANEL_REMOTE_PATH_DEV }}"
           SSH_OPTS="-p 19199 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
           SCP_OPTS="-P 19199 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
 
+          echo "===== DEBUG: Deployment variables ====="
+          echo "SSH_TARGET: ${SSH_TARGET}"
+          echo "DEPLOY_PATH: ${DEPLOY_PATH}"
+
+          echo "===== DEBUG: Testing SSH connection ====="
+          ssh ${SSH_OPTS} "${SSH_TARGET}" "echo 'SSH connection successful'; whoami; hostname; pwd"
+
           echo "Ensuring deploy directory exists: ${DEPLOY_PATH}"
-          ssh ${SSH_OPTS} "${SSH_TARGET}" "mkdir -p '${DEPLOY_PATH}'"
+
+          ssh ${SSH_OPTS} "${SSH_TARGET}" "
+            echo 'Creating directory...'
+            mkdir -p '${DEPLOY_PATH}'
+            echo 'Directory created'
+            ls -lah '${DEPLOY_PATH}'
+          "
+
+          echo "===== DEBUG: Checking local deploy.tar.gz ====="
+          if [ -f deploy.tar.gz ]; then
+            echo "deploy.tar.gz exists"
+            ls -lh deploy.tar.gz
+            echo "Archive content:"
+            tar -tzf deploy.tar.gz | head -50
+          else
+            echo "ERROR: deploy.tar.gz does not exist locally"
+            exit 1
+          fi
 
           echo "Uploading deploy.tar.gz..."
+
           scp ${SCP_OPTS} deploy.tar.gz "${SSH_TARGET}:${DEPLOY_PATH}/deploy.tar.gz"
 
+          echo "===== DEBUG: Checking uploaded file ====="
+
+          ssh ${SSH_OPTS} "${SSH_TARGET}" "
+            echo 'Remote uploaded file info:'
+            ls -lah '${DEPLOY_PATH}/deploy.tar.gz'
+
+            echo 'File type:'
+            file '${DEPLOY_PATH}/deploy.tar.gz'
+
+            echo 'Disk usage:'
+            df -h '${DEPLOY_PATH}'
+          "
+
           echo "Extracting on server..."
+
           ssh ${SSH_OPTS} "${SSH_TARGET}" "
             set -e
+
+            echo '===== SERVER DEBUG START ====='
+
+            echo 'Current user:'
+            whoami
+
+            echo 'Hostname:'
+            hostname
+
+            echo 'Deploy directory:'
             cd '${DEPLOY_PATH}'
+            pwd
+
             echo 'Server directory before extract:'
             ls -lah
+
+            echo 'Checking archive:'
             if [ ! -f deploy.tar.gz ]; then
               echo 'ERROR: deploy.tar.gz not found in ${DEPLOY_PATH}'
               exit 1
             fi
+
+            echo 'Archive size:'
+            ls -lh deploy.tar.gz
+
+            echo 'Archive files:'
+            tar -tzf deploy.tar.gz | head -50
+
             echo 'Extracting archive...'
             tar -xzf deploy.tar.gz
+
+            echo 'Removing archive...'
             rm -f deploy.tar.gz
+
+            echo 'Directory after extraction:'
+            ls -lah
+
+            echo 'Checking server.js...'
             if [ ! -f server.js ]; then
               echo 'ERROR: server.js missing after extraction'
               ls -lah
               exit 1
             fi
+
+            echo 'server.js found:'
+            ls -lh server.js
+
+            echo 'Creating restart trigger...'
             mkdir -p tmp
             touch tmp/restart.txt
-            echo 'Deployment complete. Contents:'
+
+            echo 'Restart file:'
+            ls -lah tmp/restart.txt
+
+            echo 'Deployment complete. Final contents:'
             ls -lah
+
+            echo '===== SERVER DEBUG END ====='
           "
-    
+
+          echo "===== DEBUG: Deployment finished ====="
