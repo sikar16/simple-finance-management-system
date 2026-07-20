@@ -1,0 +1,111 @@
+name: Deploy Next.js Standalone to cPanel (Fixed Safe)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # =========================
+      # Checkout
+      # =========================
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # =========================
+      # Setup Node
+      # =========================
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      # =========================
+      # Install Dependencies
+      # =========================
+      - name: Install Dependencies
+        run: |
+          npm install --include=dev 
+          npm install --legacy-peer-deps
+
+      # =========================
+      # Build Next.js
+      # =========================
+      - name: Build Next.js Project
+        run: |
+          npm run build
+          echo "Build completed"
+          ls -lah .next/standalone
+
+        env:
+         DATABASE_URL: mysql://huludeig_finance_mang:Vq@3CmmO5g]Z56p]:G7B@185.73.8.1:3306/finace_mang
+         SHADOW_DATABASE_URL: mysql://huludeig_finance_mang:Vq@3CmmO5g]Z56p]:G7B@185.73.8.1:3306/shadowfinace_mang
+         JWT_SECRET: ber_secret_key_2026_890
+      # =========================
+      # Prepare Package
+      # =========================
+      - name: Prepare Deployment Package
+        run: |
+          rm -rf deploy
+          mkdir -p deploy
+
+          cp -r .next/standalone/* deploy/
+          mkdir -p deploy/.next
+          cp -r .next/* deploy/.next/
+          cp -r public deploy/
+
+          tar -czf deploy.tar.gz -C deploy .
+
+          echo "Package created:"
+          ls -lah deploy.tar.gz
+
+      # =========================
+      # Upload + Extract (native ssh/scp — reliable on cPanel)
+      # =========================
+      - name: Upload and Deploy to cPanel
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.REAL_SSH }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p 1219 -H "${{ secrets.REAL_CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+          SSH_TARGET="${{ secrets.REAL_CPANEL_USERNAME }}@${{ secrets.REAL_CPANEL_HOST }}"
+          DEPLOY_PATH="/home/${{ secrets.REAL_CPANEL_USERNAME }}/${{ secrets.REAL_ADMIN_CPANEL_REMOTE_PATH }}"
+          SSH_OPTS="-p 1219 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+          SCP_OPTS="-P 1219 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+
+          echo "Ensuring deploy directory exists: ${DEPLOY_PATH}"
+          ssh ${SSH_OPTS} "${SSH_TARGET}" "mkdir -p '${DEPLOY_PATH}'"
+
+          echo "Uploading deploy.tar.gz..."
+          scp ${SCP_OPTS} deploy.tar.gz "${SSH_TARGET}:${DEPLOY_PATH}/deploy.tar.gz"
+
+          echo "Extracting on server..."
+          ssh ${SSH_OPTS} "${SSH_TARGET}" "
+            set -e
+            cd '${DEPLOY_PATH}'
+            echo 'Server directory before extract:'
+            ls -lah
+            if [ ! -f deploy.tar.gz ]; then
+              echo 'ERROR: deploy.tar.gz not found in ${DEPLOY_PATH}'
+              exit 1
+            fi
+            echo 'Extracting archive...'
+            tar -xzf deploy.tar.gz
+            rm -f deploy.tar.gz
+            if [ ! -f server.js ]; then
+              echo 'ERROR: server.js missing after extraction'
+              ls -lah
+              exit 1
+            fi
+            mkdir -p tmp
+            touch tmp/restart.txt
+            echo 'Deployment complete. Contents:'
+            ls -lah
+          "
+   
