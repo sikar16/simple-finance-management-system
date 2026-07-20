@@ -48,6 +48,5 @@ next-env.d.ts
 !/public/uploads/receipts/.gitkeep
 
 #delpoyment
-/deploy
+/deploy/
 /deploy.tar.gz
-
