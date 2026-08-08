@@ -52,16 +52,28 @@ export async function POST(req: NextRequest) {
       EXTENSIONS[file.type] ?? (file.name.split('.').pop() || ".bin");
     const filename = `${randomUUID()}${extension}`;
 
-    // Use Vercel Blob in production, local filesystem in development
+    // Vercel serverless has a read-only filesystem — use Blob when deployed there.
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       const blob = await put(`receipts/${filename}`, file, {
-        access: 'public',
+        access: "public",
       });
 
       return NextResponse.json({
         url: blob.url,
       });
-    } else {
+    }
+
+    if (process.env.VERCEL === "1") {
+      return NextResponse.json(
+        {
+          message:
+            "File storage is not configured. Add Vercel Blob Storage to your project in the Vercel dashboard (Storage → Create → Blob).",
+        },
+        { status: 500 }
+      );
+    }
+
+    {
       // Local development: use filesystem
       const uploadsDir = path.join(process.cwd(), "public", "uploads", "receipts");
       await mkdir(uploadsDir, { recursive: true });

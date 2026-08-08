@@ -73,7 +73,7 @@ export default function ClientDepositDetailPage({
           className="mt-4 inline-block text-sm font-medium"
           style={{ color: "#a67c3e" }}
         >
-          Back to deposits
+
         </Link>
       </div>
     );
