@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
+import { put } from "@vercel/blob";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -47,23 +48,34 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const uploadsDir = path.join(process.cwd(), "public", "uploads", "receipts");
-    await mkdir(uploadsDir, { recursive: true });
-
     const extension =
-      EXTENSIONS[file.type] ?? (path.extname(file.name) || ".bin");
+      EXTENSIONS[file.type] ?? (file.name.split('.').pop() || ".bin");
     const filename = `${randomUUID()}${extension}`;
-    const filepath = path.join(uploadsDir, filename);
-    const buffer = Buffer.from(await file.arrayBuffer());
 
-    await writeFile(filepath, buffer);
+    // Use Vercel Blob in production, local filesystem in development
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const blob = await put(`receipts/${filename}`, file, {
+        access: 'public',
+      });
 
-    return NextResponse.json({
-      url: `/uploads/receipts/${filename}`,
-    });
-  } catch {
+      return NextResponse.json({
+        url: blob.url,
+      });
+    } else {
+      // Local development: use filesystem
+      const uploadsDir = path.join(process.cwd(), "public", "uploads", "receipts");
+      await mkdir(uploadsDir, { recursive: true });
+      const filepath = path.join(uploadsDir, filename);
+      const buffer = Buffer.from(await file.arrayBuffer());
+      await writeFile(filepath, buffer);
+
+      return NextResponse.json({
+        url: `/uploads/receipts/${filename}`,
+      });
+    }
+  } catch (err) {
     return NextResponse.json(
-      { message: "Failed to upload receipt." },
+      { message: "Failed to upload receipt.", error: err },
       { status: 500 }
     );
   }
