@@ -3,6 +3,12 @@ import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { put } from "@vercel/blob";
+import {
+  getBlobAccess,
+  isBlobStorageConfigured,
+  isVercelDeployment,
+  receiptProxyUrl,
+} from "@/src/lib/blob-storage";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -49,28 +55,27 @@ export async function POST(req: NextRequest) {
     }
 
     const extension =
-      EXTENSIONS[file.type] ?? (file.name.split('.').pop() || ".bin");
+      EXTENSIONS[file.type] ?? (file.name.split(".").pop() || ".bin");
     const filename = `${randomUUID()}${extension}`;
+    const pathname = `receipts/${filename}`;
 
-    // Vercel serverless has a read-only filesystem — use Blob when deployed there.
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(`receipts/${filename}`, file, {
-        access: "public",
-      });
+    if (isBlobStorageConfigured() || isVercelDeployment()) {
+      if (!isBlobStorageConfigured()) {
+        return NextResponse.json(
+          {
+            message:
+              "Blob store is not connected to this project. Open receipt-storage → Projects → Connect to Project, select this app, then redeploy.",
+          },
+          { status: 500 }
+        );
+      }
+
+      const access = getBlobAccess();
+      const blob = await put(pathname, file, { access });
 
       return NextResponse.json({
-        url: blob.url,
+        url: access === "public" ? blob.url : receiptProxyUrl(pathname),
       });
-    }
-
-    if (process.env.VERCEL === "1") {
-      return NextResponse.json(
-        {
-          message:
-            "File storage is not configured. Add Vercel Blob Storage to your project in the Vercel dashboard (Storage → Create → Blob).",
-        },
-        { status: 500 }
-      );
     }
 
     {
