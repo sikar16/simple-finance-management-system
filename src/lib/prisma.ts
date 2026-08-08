@@ -6,11 +6,21 @@ const globalForPrisma = globalThis as {
 };
 
 function createPrismaClient() {
-  const adapter = new PrismaMariaDb(process.env.DATABASE_URL!);
-  return new PrismaClient({ adapter });
+  const databaseUrl = process.env.DATABASE_URL;
+
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is not defined");
+  }
+
+  const adapter = new PrismaMariaDb(databaseUrl);
+
+  return new PrismaClient({
+    adapter,
+  });
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+export const prisma =
+  globalForPrisma.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;

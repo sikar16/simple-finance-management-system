@@ -104,7 +104,8 @@ export async function POST(req:Request){
 
         return NextResponse.json({
 
-            message:"Registration failed"
+            message:"Registration failed",
+            error:error
 
         },{
             status:500
