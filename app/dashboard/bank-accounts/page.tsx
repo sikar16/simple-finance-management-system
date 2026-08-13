@@ -16,6 +16,7 @@ export default function BankAccountsPage() {
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  console.log(accounts);
 
   const loadAccounts = useCallback(async () => {
     setIsLoading(true);
@@ -134,7 +135,7 @@ export default function BankAccountsPage() {
                     className="text-xs font-medium uppercase tracking-wider"
                     style={{ color: "#4a4a4a" }}
                   >
-                    Current Balance
+                    Started Balance
                   </p>
                   <p className="text-xl font-bold" style={{ color: "#a67c3e" }}>
                     {formatCurrency(account.balance, account.currency)}

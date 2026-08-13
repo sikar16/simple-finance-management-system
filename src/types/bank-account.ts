@@ -4,7 +4,10 @@ export type BankAccount = {
   accountName: string;
   accountNumber: string;
   currency: string;
+  startBalance: string | number;
   balance: string | number;
+  deposits?: any[];
+  transfers?: any[];
   createdAt: string;
 };
 
@@ -13,6 +16,7 @@ export type CreateBankAccountPayload = {
   accountName: string;
   accountNumber: string;
   currency?: string;
+  startBalance?: number;
   balance?: number;
 };
 
@@ -21,5 +25,6 @@ export type UpdateBankAccountPayload = {
   accountName: string;
   accountNumber: string;
   currency: string;
+  startBalance?: number;
   balance?: number;
 };

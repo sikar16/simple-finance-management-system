@@ -104,7 +104,7 @@ export default function ClientDashboardPage() {
         {summary.map((item) => (
           <div
             key={item.title}
-            className="rounded-2xl border bg-white p-5 shadow-sm"
+            className="rounded-2xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
             style={{ borderColor: "rgba(0,0,0,0.06)" }}
           >
             <div className="flex justify-between">
@@ -132,15 +132,15 @@ export default function ClientDashboardPage() {
         className="mt-8 rounded-2xl border bg-white overflow-x-auto shadow-sm"
         style={{ borderColor: "rgba(0,0,0,0.06)" }}
       >
-        <div className="flex items-center justify-between p-5">
+        <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
           <h2 className="font-bold" style={{ color: "#1C2541" }}>
             Recent Activity
           </h2>
-          <div className="flex gap-3 text-sm">
-            <Link href="/client/deposits" style={{ color: "#a67c3e" }}>
+          <div className="flex gap-4 text-sm">
+            <Link href="/client/deposits" className="font-medium transition hover:opacity-70" style={{ color: "#a67c3e" }}>
               Deposits
             </Link>
-            <Link href="/client/transfers" style={{ color: "#a67c3e" }}>
+            <Link href="/client/transfers" className="font-medium transition hover:opacity-70" style={{ color: "#a67c3e" }}>
               Transfers
             </Link>
           </div>
@@ -166,10 +166,10 @@ export default function ClientDashboardPage() {
             </thead>
             <tbody>
               {transactions.map((item) => (
-                <tr key={item.id} className="border-t">
+                <tr key={item.id} className="border-t hover:bg-gray-50 transition-colors" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                   <td className="px-5 py-4">
                     <span
-                      className="rounded-full px-3 py-1 text-xs"
+                      className="rounded-full px-3 py-1 text-xs font-semibold"
                       style={
                         item.type === "Deposit"
                           ? { background: "#ecfdf5", color: "#059669" }

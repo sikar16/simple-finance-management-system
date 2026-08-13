@@ -43,6 +43,7 @@ model BankAccount {
   accountName   String
   accountNumber String     @unique
   currency      String     @default("ETB")
+  startBalance  Decimal    @default(0)
   balance       Decimal    @default(0)
   deposits      Deposit[]
   transfers     Transfer[]

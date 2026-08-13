@@ -39,12 +39,14 @@ export default function AddBankAccount({
     setIsLoading(true);
 
     try {
+      const balanceValue = balance ? parseFloat(balance) : 0;
       await createBankAccount({
         bankName,
         accountName,
         accountNumber,
         currency,
-        balance: balance ? parseFloat(balance) : 0,
+        startBalance: balanceValue,
+        balance: balanceValue,
       });
       resetForm();
       onSuccess?.();

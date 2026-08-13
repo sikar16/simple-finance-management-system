@@ -36,10 +36,18 @@ export async function apiRequest<T>(
 }
 
 export function formatCurrency(
-  amount: string | number,
+  amount: string | number | undefined | null,
   currency = "ETB"
 ): string {
+  if (amount === undefined || amount === null || amount === "") {
+    return `0 ${currency}`;
+  }
+  
   const value = typeof amount === "string" ? parseFloat(amount) : amount;
+
+  if (isNaN(value)) {
+    return `0 ${currency}`;
+  }
 
   return `${value.toLocaleString(undefined, {
     minimumFractionDigits: 0,

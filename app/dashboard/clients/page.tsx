@@ -107,7 +107,7 @@ export default function ClientPage() {
         {cards.map((card) => (
           <div
             key={card.title}
-            className="rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md"
+            className="rounded-2xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
             style={{ borderColor: "rgba(0,0,0,0.06)" }}
           >
             <div className="flex justify-between items-start">
@@ -138,7 +138,7 @@ export default function ClientPage() {
       </div>
 
       <div
-        className="mt-8 rounded-2xl border bg-white shadow-sm overflow-x-auto transition hover:shadow-md"
+        className="mt-8 rounded-2xl border bg-white shadow-sm overflow-x-auto hover:shadow-md transition-shadow"
         style={{ borderColor: "rgba(0,0,0,0.06)" }}
       >
         <div
@@ -183,7 +183,7 @@ export default function ClientPage() {
                 {clients.map((client) => (
                   <tr
                     key={client.id}
-                    className="border-t transition hover:bg-gray-50"
+                    className="border-t hover:bg-gray-50 transition-colors"
                     style={{ borderColor: "rgba(0,0,0,0.06)" }}
                   >
                     <td
@@ -208,14 +208,14 @@ export default function ClientPage() {
                       <div className="flex items-center gap-3">
                         <Link
                           href={`/dashboard/clients/${client.id}`}
-                          className="text-sm font-medium transition hover:opacity-70"
+                          className="text-sm font-medium hover:opacity-70 transition-opacity"
                           style={{ color: "#a67c3e" }}
                         >
                           Edit
                         </Link>
                         <button
                           onClick={() => handleDelete(client.id, client.name)}
-                          className="text-sm font-medium text-red-600 transition hover:opacity-70"
+                          className="text-sm font-medium text-red-600 hover:opacity-70 transition-opacity"
                         >
                           Delete
                         </button>

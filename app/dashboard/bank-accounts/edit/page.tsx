@@ -21,6 +21,7 @@ export default function EditBankAccount({
   const [accountName, setAccountName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [currency, setCurrency] = useState("ETB");
+  const [startBalance, setStartBalance] = useState("");
   const [balance, setBalance] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +32,7 @@ export default function EditBankAccount({
       setAccountName(account.accountName);
       setAccountNumber(account.accountNumber);
       setCurrency(account.currency);
+      setStartBalance(String(account.startBalance || 0));
       setBalance(String(account.balance));
       setError("");
     }
@@ -49,6 +51,7 @@ export default function EditBankAccount({
         accountName,
         accountNumber,
         currency,
+        startBalance: parseFloat(startBalance) || 0,
         balance: parseFloat(balance) || 0,
       });
       onSuccess?.();
@@ -161,7 +164,23 @@ export default function EditBankAccount({
 
           <div>
             <label className="block text-sm font-medium mb-1" style={{ color: "#1C2541" }}>
-              Balance
+              Start Balance
+            </label>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={startBalance}
+              onChange={(event) => setStartBalance(event.target.value)}
+              disabled={isLoading}
+              className="w-full rounded-xl border px-4 py-3"
+              style={{ borderColor: "#d0cec9" }}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#1C2541" }}>
+              Available Balance
             </label>
             <input
               type="number"
