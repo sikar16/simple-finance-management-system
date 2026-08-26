@@ -13,11 +13,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import { register } from "@/src/lib/auth";
+import { getAuthRedirectPath, getStoredAuth, register, saveAuth } from "@/src/lib/auth";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -30,14 +30,22 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    const auth = getStoredAuth();
+    if (auth) {
+      router.push(getAuthRedirectPath(auth.user.role));
+    }
+  }, [router]);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      await register({ name, phone, email, password });
-      router.push("/login?registered=true");
+      const data = await register({ name, phone, email, password });
+      saveAuth(data.token, data.user);
+      router.push(getAuthRedirectPath(data.user.role));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {

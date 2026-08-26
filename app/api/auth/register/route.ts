@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { prisma } from "@/src/lib/prisma";
 
 
@@ -82,9 +83,24 @@ export async function POST(req:Request){
 
 
 
+        const token = jwt.sign(
+            {
+                id: user.id,
+                role: user.role,
+                email: user.email
+            },
+            process.env.JWT_SECRET!,
+            {
+                expiresIn: "7d"
+            }
+        );
+
+
+
         return NextResponse.json({
 
             message:"Account created successfully",
+            token,
 
             user:{
                 id:user.id,

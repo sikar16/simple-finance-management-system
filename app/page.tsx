@@ -1,14 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { getAuthRedirectPath, getStoredAuth } from "@/src/lib/auth";
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const auth = getStoredAuth();
+    if (auth) {
+      router.push(getAuthRedirectPath(auth.user.role));
+    }
+  }, [router]);
   return (
     <main className="min-h-screen" style={{ backgroundColor: '#f8f7f4' }}>
       {/* Navbar */}
       <nav className="border-b" style={{ backgroundColor: '#1C2541', borderColor: '#2a3656' }}>
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2 cursor-pointer">
+          <Link href="/" className="flex items-center gap-2">
             <div>
               <h1 className="text-xl font-bold text-white">
                 ✍ ብእር
@@ -16,21 +27,21 @@ export default function Home() {
             </div>
           </Link>
           <div className="flex items-center gap-4">
-            <a
+            <Link
               href="/login"
               className="rounded-sm px-3 py-1  transition-colors hover:bg-white/10"
               style={{ color: '#ffffff' }}
             >
               Login
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/register"
               className="rounded-sm px-3 py-1  text-white transition-colors hover:opacity-90"
               style={{ backgroundColor: '#a67c3e' }}
             >
               Get Started
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
@@ -61,13 +72,13 @@ export default function Home() {
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4">
-          <a
+          <Link
             href="/login"
             className="rounded-lg px-6 py-1  text-white transition-colors hover:opacity-90"
             style={{ backgroundColor: '#1C2541' }}
           >
             Login
-          </a>
+          </Link>
 
           <a
             href="#features"
@@ -190,13 +201,13 @@ export default function Home() {
           <p className="mt-4 text-md" style={{ color: 'rgba(255,255,255,0.8)' }}>
             Join thousands of businesses managing their financial transactions securely.
           </p>
-          <a
+          <Link
             href="/register"
             className="mt-8 inline-block rounded-lg px-6 py-2  text-white transition-colors hover:opacity-90"
             style={{ backgroundColor: '#a67c3e' }}
           >
             Create Your Account Now
-          </a>
+          </Link>
         </div>
       </section>
 

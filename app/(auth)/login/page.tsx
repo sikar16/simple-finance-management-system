@@ -13,11 +13,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import { getAuthRedirectPath, login, saveAuth } from "@/src/lib/auth";
+import { getAuthRedirectPath, getStoredAuth, login, saveAuth } from "@/src/lib/auth";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, Suspense, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 
 function LoginForm() {
   const router = useRouter();
@@ -29,6 +29,13 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const auth = getStoredAuth();
+    if (auth) {
+      router.push(getAuthRedirectPath(auth.user.role));
+    }
+  }, [router]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

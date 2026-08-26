@@ -41,6 +41,7 @@ export function getStoredAuth(): { token: string; user: AuthUser } | null {
 export function clearAuth() {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(AUTH_USER_KEY);
+  window.dispatchEvent(new Event("auth-user-updated"));
 }
 
 export function updateStoredUser(updates: Partial<AuthUser>) {
