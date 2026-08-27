@@ -45,11 +45,20 @@ export async function PUT(
 
     const body = await req.json();
 
+    // Only allow updating specific fields, not the balance (which is calculated)
+    const { bankName, accountName, accountNumber, currency, startBalance } = body;
+
     const account = await prisma.bankAccount.update({
       where: {
         id,
       },
-      data: body,
+      data: {
+        bankName,
+        accountName,
+        accountNumber,
+        currency,
+        startBalance,
+      },
     });
 
     return NextResponse.json(account);

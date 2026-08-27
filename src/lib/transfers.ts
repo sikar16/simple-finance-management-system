@@ -34,5 +34,6 @@ export function deleteTransfer(id: string) {
 }
 
 export function formatTransferStatus(status: Transfer["status"]) {
+  if (!status) return "Unknown";
   return status.charAt(0) + status.slice(1).toLowerCase();
 }

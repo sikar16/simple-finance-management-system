@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       accountName,
       accountNumber,
       currency,
-      balance,
+      startBalance,
     } = body;
 
     if (!bankName || !accountName || !accountNumber) {
@@ -56,7 +56,8 @@ export async function POST(req: NextRequest) {
         accountName,
         accountNumber,
         currency: currency || "ETB",
-        balance: balance || 0,
+        startBalance: startBalance || 0,
+        balance: startBalance || 0, // Initially set balance to startBalance
       },
     });
 

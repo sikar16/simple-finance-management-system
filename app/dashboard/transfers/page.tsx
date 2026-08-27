@@ -107,7 +107,6 @@ export default function TransfersPage() {
                 <th className="px-5 py-4">Recipient</th>
                 <th className="px-5 py-4">Bank</th>
                 <th className="px-5 py-4">Amount</th>
-                <th className="px-5 py-4">Status</th>
                 <th className="px-5 py-4">Actions</th>
               </tr>
             </thead>
@@ -122,14 +121,7 @@ export default function TransfersPage() {
                   <td className="px-5 py-4 font-bold">
                     {formatCurrency(transfer.amount)}
                   </td>
-                  <td className="px-5 py-4">
-                    <span
-                      className="rounded-full px-3 py-1 text-xs"
-                      style={statusStyles(transfer.status)}
-                    >
-                      {formatTransferStatus(transfer.status)}
-                    </span>
-                  </td>
+
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <Link

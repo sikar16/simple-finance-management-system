@@ -18,7 +18,7 @@ export default function AddBankAccount({
   const [accountName, setAccountName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [currency, setCurrency] = useState("ETB");
-  const [balance, setBalance] = useState("");
+  const [startBalance, setStartBalance] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,7 +29,7 @@ export default function AddBankAccount({
     setAccountName("");
     setAccountNumber("");
     setCurrency("ETB");
-    setBalance("");
+    setStartBalance("");
     setError("");
   }
 
@@ -39,14 +39,13 @@ export default function AddBankAccount({
     setIsLoading(true);
 
     try {
-      const balanceValue = balance ? parseFloat(balance) : 0;
+      const startBalanceValue = startBalance ? parseFloat(startBalance) : 0;
       await createBankAccount({
         bankName,
         accountName,
         accountNumber,
         currency,
-        startBalance: balanceValue,
-        balance: balanceValue,
+        startBalance: startBalanceValue,
       });
       resetForm();
       onSuccess?.();
@@ -177,15 +176,16 @@ export default function AddBankAccount({
 
           <div>
             <label className="block text-sm font-medium mb-1" style={{ color: "#1C2541" }}>
-              Opening Balance
+              Starting Balance *
             </label>
             <input
               type="number"
               min="0"
               step="0.01"
-              value={balance}
-              onChange={(event) => setBalance(event.target.value)}
+              value={startBalance}
+              onChange={(event) => setStartBalance(event.target.value)}
               placeholder="0"
+              required
               disabled={isLoading}
               className="w-full rounded-xl border px-4 py-3 focus:outline-none focus:ring-2 focus:ring-offset-0 transition"
               style={{ borderColor: "#d0cec9" }}

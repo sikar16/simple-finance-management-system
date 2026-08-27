@@ -135,10 +135,10 @@ export default function BankAccountsPage() {
                     className="text-xs font-medium uppercase tracking-wider"
                     style={{ color: "#4a4a4a" }}
                   >
-                    Started Balance
+                    Starting Balance
                   </p>
                   <p className="text-xl font-bold" style={{ color: "#a67c3e" }}>
-                    {formatCurrency(account.balance, account.currency)}
+                    {formatCurrency(account.startBalance, account.currency)}
                   </p>
                 </div>
               </div>

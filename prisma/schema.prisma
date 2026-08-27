@@ -6,6 +6,101 @@ datasource db {
   provider = "mysql"
 }
 
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  role          Role           @default(CLIENT)
+  createdAt     DateTime       @default(now())
+  phone         String         @unique
+  isActive      Boolean        @default(true)
+  deposits      Deposit[]
+  notifications Notification[]
+  transactions  Transaction[]
+  transfers     Transfer[]
+}
+
+model BankAccount {
+  id            String     @id @default(uuid())
+  bankName      String
+  accountName   String
+  accountNumber String     @unique
+  currency      String     @default("ETB")
+  balance       Decimal    @default(0.000000000000000000000000000000)
+  createdAt     DateTime   @default(now())
+  startBalance  Decimal    @default(0.000000000000000000000000000000)
+  deposits      Deposit[]
+  transfers     Transfer[]
+}
+
+model Deposit {
+  id              String       @id @default(uuid())
+  clientId        String
+  bankAccountId   String
+  amount          Decimal
+  referenceNumber String?
+  receipt         String?
+  note            String?
+  date            DateTime     @default(now())
+  createdAt       DateTime     @default(now())
+  bankAccount     BankAccount  @relation(fields: [bankAccountId], references: [id])
+  client          User         @relation(fields: [clientId], references: [id])
+  transaction     Transaction?
+
+  @@index([bankAccountId], map: "Deposit_bankAccountId_fkey")
+  @@index([clientId], map: "Deposit_clientId_fkey")
+}
+
+model Transfer {
+  id               String         @id @default(uuid())
+  clientId         String
+  bankAccountId    String
+  recipientName    String
+  recipientBank    String
+  recipientAccount String
+  amount           Decimal
+  referenceNumber  String?
+  receipt          String?
+  status           TransferStatus @default(PENDING)
+  date             DateTime       @default(now())
+  createdAt        DateTime       @default(now())
+  transaction      Transaction?
+  bankAccount      BankAccount    @relation(fields: [bankAccountId], references: [id])
+  client           User           @relation(fields: [clientId], references: [id])
+
+  @@index([bankAccountId], map: "Transfer_bankAccountId_fkey")
+  @@index([clientId], map: "Transfer_clientId_fkey")
+}
+
+model Transaction {
+  id           String          @id @default(uuid())
+  clientId     String
+  type         TransactionType
+  depositId    String?         @unique
+  transferId   String?         @unique
+  amount       Decimal
+  balanceAfter Decimal
+  createdAt    DateTime        @default(now())
+  client       User            @relation(fields: [clientId], references: [id])
+  deposit      Deposit?        @relation(fields: [depositId], references: [id])
+  transfer     Transfer?       @relation(fields: [transferId], references: [id])
+
+  @@index([clientId], map: "Transaction_clientId_fkey")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  clientId  String
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  client    User     @relation(fields: [clientId], references: [id])
+
+  @@index([clientId], map: "Notification_clientId_fkey")
+}
+
 enum Role {
   ADMIN
   CLIENT
@@ -20,89 +115,4 @@ enum TransferStatus {
 enum TransactionType {
   DEPOSIT
   TRANSFER
-}
-
-model User {
-  id            String         @id @default(uuid())
-  name          String
-  phone         String         @unique
-  email         String         @unique
-  password      String
-  role          Role           @default(CLIENT)
-  createdAt     DateTime       @default(now())
-  isActive  Boolean  @default(true)
-  deposits      Deposit[]
-  transfers     Transfer[]
-  notifications Notification[]
-  transactions  Transaction[]
-}
-
-model BankAccount {
-  id            String     @id @default(uuid())
-  bankName      String
-  accountName   String
-  accountNumber String     @unique
-  currency      String     @default("ETB")
-  startBalance  Decimal    @default(0)
-  balance       Decimal    @default(0)
-  deposits      Deposit[]
-  transfers     Transfer[]
-  createdAt     DateTime   @default(now())
-}
-
-model Deposit {
-  id              String       @id @default(uuid())
-  clientId        String
-  client          User         @relation(fields: [clientId], references: [id])
-  bankAccountId   String
-  bankAccount     BankAccount  @relation(fields: [bankAccountId], references: [id])
-  amount          Decimal
-  referenceNumber String?
-  receipt         String?
-  note            String?
-  date            DateTime     @default(now())
-  createdAt       DateTime     @default(now())
-  transaction     Transaction?
-}
-
-model Transfer {
-  id               String         @id @default(uuid())
-  clientId         String
-  client           User           @relation(fields: [clientId], references: [id])
-  bankAccountId    String
-  bankAccount      BankAccount    @relation(fields: [bankAccountId], references: [id])
-  recipientName    String
-  recipientBank    String
-  recipientAccount String
-  amount           Decimal
-  referenceNumber  String?
-  receipt          String?
-  status           TransferStatus @default(PENDING)
-  date             DateTime       @default(now())
-  createdAt        DateTime       @default(now())
-  transaction      Transaction?
-}
-
-model Transaction {
-  id           String          @id @default(uuid())
-  clientId     String
-  client       User            @relation(fields: [clientId], references: [id])
-  type         TransactionType
-  depositId    String?         @unique
-  deposit      Deposit?        @relation(fields: [depositId], references: [id])
-  transferId   String?         @unique
-  transfer     Transfer?       @relation(fields: [transferId], references: [id])
-  amount       Decimal
-  balanceAfter Decimal
-  createdAt    DateTime        @default(now())
-}
-
-model Notification {
-  id        String   @id @default(uuid())
-  clientId  String
-  client    User     @relation(fields: [clientId], references: [id])
-  title     String
-  message   String
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
 }

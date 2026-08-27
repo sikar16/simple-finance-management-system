@@ -2,11 +2,12 @@
 
 import { formatCurrency } from "@/src/lib/api";
 import { getStoredAuth } from "@/src/lib/auth";
-import { getClientTotals, getClients } from "@/src/lib/clients";
 import { buildRecentTransactions } from "@/src/lib/dashboard";
 import { getDeposits } from "@/src/lib/deposits";
+import { getBankAccountBreakdowns, getBankAccounts } from "@/src/lib/bank-accounts";
 import { getTransfers } from "@/src/lib/transfers";
 import type { DashboardTransaction } from "@/src/lib/dashboard";
+import type { BankAccountBreakdown } from "@/src/lib/bank-accounts";
 import { useEffect, useState } from "react";
 
 export default function AdminDashboardPage() {
@@ -15,6 +16,7 @@ export default function AdminDashboardPage() {
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [totalTransfers, setTotalTransfers] = useState(0);
   const [transactions, setTransactions] = useState<DashboardTransaction[]>([]);
+  const [bankAccountBreakdowns, setBankAccountBreakdowns] = useState<BankAccountBreakdown[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -29,17 +31,24 @@ export default function AdminDashboardPage() {
       setError("");
 
       try {
-        const [clients, deposits, transfers] = await Promise.all([
-          getClients(),
+        const [deposits, transfers, bankAccounts] = await Promise.all([
           getDeposits(),
           getTransfers(),
+          getBankAccounts(),
         ]);
 
-        const totals = getClientTotals(clients);
-        setAvailableBalance(totals.availableBalance);
-        setTotalDeposits(totals.totalDeposits);
-        setTotalTransfers(totals.totalTransfers);
+        const bankBreakdowns = getBankAccountBreakdowns(bankAccounts, deposits, transfers);
+
+        // Calculate totals from bank account breakdowns instead of client totals
+        const totalAvailableBalance = bankBreakdowns.reduce((sum, b) => sum + b.availableBalance, 0);
+        const totalDepositsSum = bankBreakdowns.reduce((sum, b) => sum + b.totalDeposits, 0);
+        const totalTransfersSum = bankBreakdowns.reduce((sum, b) => sum + b.totalTransfers, 0);
+
+        setAvailableBalance(totalAvailableBalance);
+        setTotalDeposits(totalDepositsSum);
+        setTotalTransfers(totalTransfersSum);
         setTransactions(buildRecentTransactions(deposits, transfers));
+        setBankAccountBreakdowns(bankBreakdowns);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to load dashboard"
@@ -52,23 +61,40 @@ export default function AdminDashboardPage() {
     loadDashboard();
   }, []);
 
-  const summary = [
-    {
-      title: "Available Balance",
-      value: formatCurrency(availableBalance),
-      icon: "💰",
-    },
-    {
-      title: "Total Deposits",
-      value: formatCurrency(totalDeposits),
-      icon: "📥",
-    },
-    {
-      title: "Total Transfers",
-      value: formatCurrency(totalTransfers),
-      icon: "🔄",
-    },
-  ];
+  const summary: Array<{
+    title: string;
+    value: string;
+    icon: string;
+    breakdowns: Array<{ label: string; value: string }>;
+  }> = [
+      {
+        title: "Available Balance",
+        value: formatCurrency(availableBalance),
+        icon: "💰",
+        breakdowns: bankAccountBreakdowns.map(b => ({
+          label: `${b.bankName} - ${b.accountName}`,
+          value: formatCurrency(b.availableBalance)
+        }))
+      },
+      {
+        title: "Total Deposits",
+        value: formatCurrency(totalDeposits),
+        icon: "📥",
+        breakdowns: bankAccountBreakdowns.map(b => ({
+          label: `${b.bankName} - ${b.accountName}`,
+          value: formatCurrency(b.totalDeposits)
+        }))
+      },
+      {
+        title: "Total Transfers",
+        value: formatCurrency(totalTransfers),
+        icon: "🔄",
+        breakdowns: bankAccountBreakdowns.map(b => ({
+          label: `${b.bankName} - ${b.accountName}`,
+          value: formatCurrency(b.totalTransfers)
+        }))
+      },
+    ];
 
   return (
     <div className="p-6">
@@ -113,6 +139,26 @@ export default function AdminDashboardPage() {
                 {item.icon}
               </div>
             </div>
+
+            {!isLoading && item.breakdowns && item.breakdowns.length > 0 && (
+              <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <p className="text-xs text-gray-400 mb-2">By Bank Account:</p>
+                <div className="space-y-1">
+                  {item.breakdowns.map((breakdown, idx) => (
+                    <div key={idx} className="flex justify-between text-xs">
+                      <span className="text-gray-500">{breakdown.label}</span>
+                      <span className="font-medium" style={{ color: "#1C2541" }}>{breakdown.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!isLoading && (!item.breakdowns || item.breakdowns.length === 0) && (
+              <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <p className="text-xs text-gray-400">No bank accounts configured</p>
+              </div>
+            )}
           </div>
         ))}
       </div>

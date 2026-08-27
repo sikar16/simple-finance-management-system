@@ -16,8 +16,8 @@ export type CreateBankAccountPayload = {
   accountName: string;
   accountNumber: string;
   currency?: string;
-  startBalance?: number;
-  balance?: number;
+  startBalance: number;
+  balance: number;
 };
 
 export type UpdateBankAccountPayload = {
@@ -26,5 +26,4 @@ export type UpdateBankAccountPayload = {
   accountNumber: string;
   currency: string;
   startBalance?: number;
-  balance?: number;
 };
