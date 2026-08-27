@@ -46,6 +46,7 @@ export default function AddBankAccount({
         accountNumber,
         currency,
         startBalance: startBalanceValue,
+        balance: startBalanceValue,
       });
       resetForm();
       onSuccess?.();
