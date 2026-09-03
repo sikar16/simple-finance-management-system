@@ -1,23 +1,26 @@
-import admin from "firebase-admin";
+import { initializeApp, getApps, cert } from "firebase-admin/app";
+import { getMessaging } from "firebase-admin/messaging";
 
-if (!admin.apps.length) {
-  const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-  
-  if (serviceAccountKey) {
-    try {
-      const serviceAccount = JSON.parse(serviceAccountKey);
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-      });
-    } catch (error) {
-      console.error("Error initializing Firebase Admin:", error);
-    }
-  } else {
-    console.warn("FIREBASE_SERVICE_ACCOUNT_KEY not found in environment variables");
+let messagingInstance: ReturnType<typeof getMessaging> | null = null;
+
+const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+
+if (serviceAccountKey && getApps().length === 0) {
+  try {
+    const serviceAccount = JSON.parse(serviceAccountKey);
+    initializeApp({
+      credential: cert(serviceAccount),
+    });
+    messagingInstance = getMessaging();
+    console.log("Firebase Admin initialized successfully");
+  } catch (error) {
+    console.error("Error initializing Firebase Admin:", error);
+    console.warn("Push notifications will not work without proper Firebase credentials");
   }
+} else if (!serviceAccountKey) {
+  console.warn("FIREBASE_SERVICE_ACCOUNT_KEY not found in environment variables");
+  console.warn("Push notifications will not work without proper Firebase credentials");
 }
-
-export const messaging = admin.messaging();
 
 export async function sendPushNotification(
   fcmToken: string,
@@ -25,6 +28,11 @@ export async function sendPushNotification(
   body: string,
   data?: Record<string, string>
 ) {
+  if (!messagingInstance) {
+    console.warn("Firebase messaging not initialized, skipping push notification");
+    return null;
+  }
+
   try {
     const message = {
       token: fcmToken,
@@ -35,7 +43,7 @@ export async function sendPushNotification(
       data: data || {},
     };
 
-    const response = await messaging.send(message);
+    const response = await messagingInstance.send(message);
     console.log("Successfully sent message:", response);
     return response;
   } catch (error) {
