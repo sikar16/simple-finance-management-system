@@ -1,0 +1,106 @@
+[debug] [2026-09-03T11:28:13.522Z] ----------------------------------------------------------------------
+[debug] [2026-09-03T11:28:13.523Z] Command:       /usr/local/bin/node /usr/local/bin/firebase init
+[debug] [2026-09-03T11:28:13.523Z] CLI Version:   15.11.0
+[debug] [2026-09-03T11:28:13.523Z] Platform:      darwin
+[debug] [2026-09-03T11:28:13.523Z] Node Version:  v22.19.0
+[debug] [2026-09-03T11:28:13.523Z] Time:          Thu Sep 03 2026 14:28:13 GMT+0300 (East Africa Time)
+[debug] [2026-09-03T11:28:13.524Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-09-03T11:28:13.524Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/sikuta/Documents/ብአር
+
+[debug] [2026-09-03T11:28:16.790Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-09-03T11:28:16.791Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[debug] [2026-09-03T11:30:25.963Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-09-03T11:30:25.963Z] > authorizing via signed-in user (sikarmahi6123@gmail.com)
+[debug] [2026-09-03T11:30:25.965Z] Checked if tokens are valid: false, expires at: 1776627372887
+[debug] [2026-09-03T11:30:25.965Z] Checked if tokens are valid: false, expires at: 1776627372887
+[debug] [2026-09-03T11:30:25.965Z] > refreshing access token with scopes: []
+[debug] [2026-09-03T11:30:25.966Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-09-03T11:30:25.967Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-09-03T11:30:27.024Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-09-03T11:30:27.024Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-09-03T11:30:27.036Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2026-09-03T11:30:28.897Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2026-09-03T11:30:28.898Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] 
+=== Dataconnect Setup
+[info] i  dataconnect: ensuring required API firebasedataconnect.googleapis.com is enabled... 
+[debug] [2026-09-03T11:30:32.102Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:30:32.102Z] Checked if tokens are valid: true, expires at: 1788438626024
+[info] i  dataconnect: ensuring required API sqladmin.googleapis.com is enabled... 
+[debug] [2026-09-03T11:30:32.102Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:30:32.102Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:30:32.102Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/firebasedataconnect.googleapis.com [none]
+[debug] [2026-09-03T11:30:32.102Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/firebasedataconnect.googleapis.com  x-goog-user-project=finacemanagment
+[debug] [2026-09-03T11:30:32.103Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/sqladmin.googleapis.com [none]
+[debug] [2026-09-03T11:30:32.103Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/sqladmin.googleapis.com  x-goog-user-project=finacemanagment
+[debug] [2026-09-03T11:30:34.754Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/firebasedataconnect.googleapis.com 200
+[debug] [2026-09-03T11:30:34.754Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/firebasedataconnect.googleapis.com [omitted]
+[warn] ⚠  dataconnect: missing required API firebasedataconnect.googleapis.com. Enabling now... 
+[debug] [2026-09-03T11:30:34.755Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:30:34.756Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:30:34.756Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/firebasedataconnect.googleapis.com:enable [none]
+[debug] [2026-09-03T11:30:34.756Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/firebasedataconnect.googleapis.com:enable  x-goog-user-project=finacemanagment
+[debug] [2026-09-03T11:30:34.767Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/sqladmin.googleapis.com 200
+[debug] [2026-09-03T11:30:34.767Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/sqladmin.googleapis.com [omitted]
+[warn] ⚠  dataconnect: missing required API sqladmin.googleapis.com. Enabling now... 
+[debug] [2026-09-03T11:30:34.768Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:30:34.768Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:30:34.769Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/sqladmin.googleapis.com:enable [none]
+[debug] [2026-09-03T11:30:34.769Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/sqladmin.googleapis.com:enable  x-goog-user-project=finacemanagment
+[debug] [2026-09-03T11:30:35.475Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/sqladmin.googleapis.com:enable 200
+[debug] [2026-09-03T11:30:35.475Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/sqladmin.googleapis.com:enable [omitted]
+[debug] [2026-09-03T11:30:35.493Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/firebasedataconnect.googleapis.com:enable 200
+[debug] [2026-09-03T11:30:35.493Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/firebasedataconnect.googleapis.com:enable [omitted]
+[debug] [2026-09-03T11:30:45.507Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:30:45.508Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:30:45.508Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/finacemanagment/locations/-/services [none]
+[debug] [2026-09-03T11:30:48.371Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/finacemanagment/locations/-/services 200
+[debug] [2026-09-03T11:30:48.371Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/finacemanagment/locations/-/services {}
+[info] i  Learn more about Gemini in Firebase and how it uses your data: https://firebase.google.com/docs/gemini-in-firebase#how-gemini-in-firebase-uses-your-data 
+[info] i  : ensuring required API cloudaicompanion.googleapis.com is enabled... 
+[debug] [2026-09-03T11:31:19.153Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:19.153Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:19.153Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/cloudaicompanion.googleapis.com [none]
+[debug] [2026-09-03T11:31:19.153Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/cloudaicompanion.googleapis.com  x-goog-user-project=finacemanagment
+[debug] [2026-09-03T11:31:21.581Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/cloudaicompanion.googleapis.com 200
+[debug] [2026-09-03T11:31:21.581Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/finacemanagment/services/cloudaicompanion.googleapis.com [omitted]
+[info] ✔  : required API cloudaicompanion.googleapis.com is enabled 
+[debug] [2026-09-03T11:31:36.954Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:36.954Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:36.955Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/finacemanagment/billingInfo [none]
+[debug] [2026-09-03T11:31:38.303Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/finacemanagment/billingInfo 200
+[debug] [2026-09-03T11:31:38.304Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/finacemanagment/billingInfo {"name":"projects/finacemanagment/billingInfo","projectId":"finacemanagment","billingAccountName":"","billingEnabled":false}
+[debug] [2026-09-03T11:31:38.304Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:38.304Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:38.305Z] >>> [apiv2][query] GET https://monitoring.googleapis.com/v3/projects/finacemanagment/timeSeries/ filter=metric.type%3D%22serviceruntime.googleapis.com%2Fquota%2Fallocation%2Fusage%22+AND+metric.label.quota_metric+%3D+%22sqladmin.googleapis.com%2Ffdc_lifetime_free_trial_per_project%22&interval.endTime=2026-09-03T11%3A31%3A38.304Z&interval.startTime=2026-08-27T11%3A31%3A38.304Z
+[debug] [2026-09-03T11:31:40.146Z] <<< [apiv2][status] GET https://monitoring.googleapis.com/v3/projects/finacemanagment/timeSeries/ 200
+[debug] [2026-09-03T11:31:40.147Z] <<< [apiv2][body] GET https://monitoring.googleapis.com/v3/projects/finacemanagment/timeSeries/ {"unit":"1"}
+[info] ✔  dataconnect: CloudSQL no cost trial available! 
+[debug] [2026-09-03T11:31:40.148Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:40.148Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:40.149Z] >>> [apiv2][query] GET https://sqladmin.googleapis.com/v1/projects/finacemanagment/instances [none]
+[debug] [2026-09-03T11:31:42.065Z] <<< [apiv2][status] GET https://sqladmin.googleapis.com/v1/projects/finacemanagment/instances 200
+[debug] [2026-09-03T11:31:42.066Z] <<< [apiv2][body] GET https://sqladmin.googleapis.com/v1/projects/finacemanagment/instances {}
+[debug] [2026-09-03T11:31:42.067Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:42.067Z] Checked if tokens are valid: true, expires at: 1788438626024
+[debug] [2026-09-03T11:31:42.067Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/finacemanagment/locations [none]
+[debug] [2026-09-03T11:31:44.533Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/finacemanagment/locations 200
+[debug] [2026-09-03T11:31:44.534Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/finacemanagment/locations {"locations":[{"name":"projects/finacemanagment/locations/asia-east1","locationId":"asia-east1","displayName":"Taiwan"},{"name":"projects/finacemanagment/locations/asia-east2","locationId":"asia-east2","displayName":"Hong Kong"},{"name":"projects/finacemanagment/locations/asia-northeast1","locationId":"asia-northeast1","displayName":"Tokyo"},{"name":"projects/finacemanagment/locations/asia-northeast2","locationId":"asia-northeast2","displayName":"Osaka"},{"name":"projects/finacemanagment/locations/asia-northeast3","locationId":"asia-northeast3","displayName":"Seoul"},{"name":"projects/finacemanagment/locations/asia-south1","locationId":"asia-south1","displayName":"Mumbai"},{"name":"projects/finacemanagment/locations/asia-southeast1","locationId":"asia-southeast1","displayName":"Singapore"},{"name":"projects/finacemanagment/locations/asia-southeast2","locationId":"asia-southeast2","displayName":"Jakarta"},{"name":"projects/finacemanagment/locations/australia-southeast1","locationId":"australia-southeast1","displayName":"Sydney"},{"name":"projects/finacemanagment/locations/australia-southeast2","locationId":"australia-southeast2","displayName":"Melbourne"},{"name":"projects/finacemanagment/locations/europe-central2","locationId":"europe-central2","displayName":"Warsaw"},{"name":"projects/finacemanagment/locations/europe-north1","locationId":"europe-north1","displayName":"Finland"},{"name":"projects/finacemanagment/locations/europe-southwest1","locationId":"europe-southwest1","displayName":"Madrid"},{"name":"projects/finacemanagment/locations/europe-west1","locationId":"europe-west1","displayName":"Belgium"},{"name":"projects/finacemanagment/locations/europe-west2","locationId":"europe-west2","displayName":"London"},{"name":"projects/finacemanagment/locations/europe-west3","locationId":"europe-west3","displayName":"Frankfurt"},{"name":"projects/finacemanagment/locations/europe-west4","locationId":"europe-west4","displayName":"Netherlands"},{"name":"projects/finacemanagment/locations/europe-west6","locationId":"europe-west6","displayName":"Zurich"},{"name":"projects/finacemanagment/locations/europe-west8","locationId":"europe-west8","displayName":"Milan"},{"name":"projects/finacemanagment/locations/europe-west9","locationId":"europe-west9","displayName":"Paris"},{"name":"projects/finacemanagment/locations/me-west1","locationId":"me-west1","displayName":"Tel Aviv"},{"name":"projects/finacemanagment/locations/northamerica-northeast1","locationId":"northamerica-northeast1","displayName":"Montréal"},{"name":"projects/finacemanagment/locations/northamerica-northeast2","locationId":"northamerica-northeast2","displayName":"Toronto"},{"name":"projects/finacemanagment/locations/southamerica-east1","locationId":"southamerica-east1","displayName":"São Paulo"},{"name":"projects/finacemanagment/locations/southamerica-west1","locationId":"southamerica-west1","displayName":"Santiago"},{"name":"projects/finacemanagment/locations/us-central1","locationId":"us-central1","displayName":"Iowa"},{"name":"projects/finacemanagment/locations/us-east1","locationId":"us-east1","displayName":"South Carolina"},{"name":"projects/finacemanagment/locations/us-east4","locationId":"us-east4","displayName":"Northern Virginia"},{"name":"projects/finacemanagment/locations/us-south1","locationId":"us-south1","displayName":"Dallas"},{"name":"projects/finacemanagment/locations/us-west1","locationId":"us-west1","displayName":"Oregon"},{"name":"projects/finacemanagment/locations/us-west2","locationId":"us-west2","displayName":"Los Angeles"},{"name":"projects/finacemanagment/locations/us-west3","locationId":"us-west3","displayName":"Salt Lake City"},{"name":"projects/finacemanagment/locations/us-west4","locationId":"us-west4","displayName":"Las Vegas"}]}
+[info] ✔  dataconnect: Detected existing apps . (admin_node), . (web), deploy (web), src/generated/prisma (web) 
