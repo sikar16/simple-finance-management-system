@@ -1,5 +1,6 @@
 import { prisma } from "@/src/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { createAndSendNotification } from "@/src/lib/notifications";
 
 export async function GET() {
   try {
@@ -80,6 +81,13 @@ export async function POST(req: NextRequest) {
         balanceAfter: newBalance,
       },
     });
+
+    await createAndSendNotification(
+      clientId,
+      "Deposit Received",
+      `${amount} ETB has been deposited successfully.`,
+      { type: "deposit", depositId: deposit.id }
+    );
 
     return NextResponse.json(deposit, {
       status: 201,

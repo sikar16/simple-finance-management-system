@@ -1,5 +1,6 @@
 import { prisma } from "@/src/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { createAndSendNotification } from "@/src/lib/notifications";
 
 export async function GET() {
   try {
@@ -92,13 +93,12 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    await prisma.notification.create({
-      data: {
-        clientId,
-        title: "Transfer Completed",
-        message: `${amount} ETB has been transferred successfully.`,
-      },
-    });
+    await createAndSendNotification(
+      clientId,
+      "Transfer Completed",
+      `${amount} ETB has been transferred successfully.`,
+      { type: "transfer", transferId: transfer.id }
+    );
 
     return NextResponse.json(transfer, {
       status: 201,

@@ -15,6 +15,7 @@ model User {
   createdAt     DateTime       @default(now())
   phone         String         @unique
   isActive      Boolean        @default(true)
+  fcmToken      String?
   deposits      Deposit[]
   notifications Notification[]
   transactions  Transaction[]
